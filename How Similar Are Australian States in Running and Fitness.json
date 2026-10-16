@@ -1,0 +1,72 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Dendrogram showing similarities between Australian states based on running and fitness participation rates.",
+  "title": {
+    "text": "How Similar Are Australian States in Running and Fitness?",
+    "subtitle": "Standardised running and fitness rates; average-linkage clustering",
+    "anchor": "middle"
+  },
+  "data": {
+    "url": "https://raw.githubusercontent.com/HW240823/fit3179-a2-running-fitness/refs/heads/main/dendrogram_layout.csv",
+    "format": {"type": "csv"}
+  },
+  "width": 650,
+  "height": 420,
+  "layer": [
+    {
+      "transform": [{"filter": "datum.kind === 'branch'"}],
+      "mark": {"type": "line", "stroke": "#2878A5", "strokeWidth": 2.5},
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "scale": {"domain": [-0.4, 7.4]},
+          "axis": null
+        },
+        "y": {
+          "field": "distance",
+          "type": "quantitative",
+          "scale": {"domain": [-0.25, 3.3]},
+          "axis": {
+            "title": "Standardised Euclidean distance",
+            "grid": true,
+            "tickCount": 7
+          }
+        },
+        "detail": {"field": "segment"},
+        "order": {"field": "order", "type": "quantitative"},
+        "tooltip": [
+          {"field": "segment", "type": "nominal", "title": "Branch"},
+          {
+            "field": "distance",
+            "type": "quantitative",
+            "title": "Distance",
+            "format": ".3f"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [{"filter": "datum.kind === 'label'"}],
+      "mark": {"type": "text", "fontSize": 13, "fontWeight": "bold", "dy": 4},
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "scale": {"domain": [-0.4, 7.4]},
+          "axis": null
+        },
+        "y": {
+          "field": "distance",
+          "type": "quantitative",
+          "scale": {"domain": [-0.25, 3.3]}
+        },
+        "text": {"field": "state", "type": "nominal"}
+      }
+    }
+  ],
+  "config": {
+    "view": {"stroke": null},
+    "axis": {"labelFontSize": 12, "titleFontSize": 13}
+  }
+}

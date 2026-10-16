@@ -1,0 +1,110 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Slopegraph comparing Australian running and fitness participation rates from 2024 to 2025.",
+  "title": {
+    "text": "Running and Fitness/Gym Participation Rates",
+    "subtitle": "Australian participation rates, 2024–2025",
+    "anchor": "middle"
+  },
+  "data": {
+    "url": "https://raw.githubusercontent.com/HW240823/fit3179-a2-running-fitness/refs/heads/main/participation_by_year.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [
+    {"calculate": "toNumber(datum.year)", "as": "year_num"},
+    {"calculate": "toNumber(datum.participation_rate)", "as": "rate"}
+  ],
+  "width": 620,
+  "height": 360,
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "strokeWidth": 3,
+        "point": {"filled": true, "size": 100}
+      },
+      "encoding": {
+        "x": {
+          "field": "year_num",
+          "type": "quantitative",
+          "scale": {"domain": [2023.8, 2025.6]},
+          "axis": {
+            "title": "Year",
+            "values": [2024, 2025],
+            "format": "d",
+            "grid": false
+          }
+        },
+        "y": {
+          "field": "rate",
+          "type": "quantitative",
+          "scale": {"domain": [0.1, 0.36]},
+          "axis": {
+            "title": "Participation rate",
+            "format": ".0%",
+            "values": [0.1, 0.15, 0.2, 0.25, 0.3, 0.35],
+            "grid": true
+          }
+        },
+        "detail": {"field": "activity"},
+        "order": {"field": "year_num", "type": "quantitative"},
+        "color": {
+          "field": "activity",
+          "type": "nominal",
+          "title": "Activity",
+          "scale": {
+            "domain": ["Running", "Fitness/Gym"],
+            "range": ["#2878A5", "#E07A2D"]
+          }
+        },
+        "tooltip": [
+          {"field": "activity", "type": "nominal", "title": "Activity"},
+          {
+            "field": "year_num",
+            "type": "quantitative",
+            "title": "Year",
+            "format": "d"
+          },
+          {
+            "field": "rate",
+            "type": "quantitative",
+            "title": "Participation rate",
+            "format": ".1%"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {"calculate": "format(datum.rate, '.1%')", "as": "rate_label"}
+      ],
+      "mark": {
+        "type": "text",
+        "dy": -12,
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#222222"
+      },
+      "encoding": {
+        "x": {
+          "field": "year_num",
+          "type": "quantitative",
+          "scale": {"domain": [2023.8, 2025.6]},
+          "axis": null
+        },
+        "y": {
+          "field": "rate",
+          "type": "quantitative",
+          "scale": {"domain": [0.1, 0.36]},
+          "axis": null
+        },
+        "text": {"field": "rate_label", "type": "nominal"}
+      }
+    }
+  ],
+  "resolve": {"axis": {"x": "independent", "y": "independent"}},
+  "config": {
+    "view": {"stroke": null},
+    "axis": {"labelFontSize": 12, "titleFontSize": 13}
+  }
+}

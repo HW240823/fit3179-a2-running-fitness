@@ -1,0 +1,90 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Heatmap comparing overall and organised participation rates for running and fitness in Australia in 2025.",
+  "title": {
+    "text": "Participation Rates by Activity and Participation Type",
+    "subtitle": "Overall and organised participation rates, Australia 2025",
+    "anchor": "middle"
+  },
+  "data": {
+    "url": "https://raw.githubusercontent.com/HW240823/fit3179-a2-running-fitness/refs/heads/main/participation_organised_2025.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [
+    {"calculate": "toNumber(datum.participation_rate)", "as": "rate"},
+    {"calculate": "format(datum.rate, '.1%')", "as": "rate_label"}
+  ],
+  "width": 480,
+  "height": 180,
+  "layer": [
+    {
+      "mark": {
+        "type": "rect",
+        "stroke": "white",
+        "strokeWidth": 3,
+        "cornerRadius": 3
+      },
+      "encoding": {
+        "x": {
+          "field": "participation_type",
+          "type": "nominal",
+          "sort": ["Overall", "Organised"],
+          "axis": {"title": "Participation type", "labelAngle": 0}
+        },
+        "y": {
+          "field": "activity",
+          "type": "nominal",
+          "sort": ["Fitness/Gym", "Running"],
+          "axis": {"title": null}
+        },
+        "color": {
+          "field": "rate",
+          "type": "quantitative",
+          "title": "Participation rate",
+          "scale": {"domain": [0, 0.36], "range": ["#EAF4F4", "#087F8C"]},
+          "legend": {"format": ".0%"}
+        },
+        "tooltip": [
+          {"field": "activity", "type": "nominal", "title": "Activity"},
+          {
+            "field": "participation_type",
+            "type": "nominal",
+            "title": "Participation type"
+          },
+          {
+            "field": "rate",
+            "type": "quantitative",
+            "title": "Participation rate",
+            "format": ".1%"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {"type": "text", "fontSize": 16, "fontWeight": "bold"},
+      "encoding": {
+        "x": {
+          "field": "participation_type",
+          "type": "nominal",
+          "sort": ["Overall", "Organised"],
+          "axis": {"title": "Participation type", "labelAngle": 0}
+        },
+        "y": {
+          "field": "activity",
+          "type": "nominal",
+          "sort": ["Fitness/Gym", "Running"],
+          "axis": {"title": null}
+        },
+        "text": {"field": "rate_label", "type": "nominal"},
+        "color": {
+          "condition": {"test": "datum.rate > 0.18", "value": "white"},
+          "value": "#18343A"
+        }
+      }
+    }
+  ],
+  "config": {
+    "view": {"stroke": null},
+    "axis": {"labelFontSize": 12, "titleFontSize": 13}
+  }
+}

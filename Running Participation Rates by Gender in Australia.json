@@ -1,0 +1,121 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Lollipop chart comparing running participation rates by gender in Australia in 2025.",
+  "title": {
+    "text": "Running Participation Rates by Gender in Australia",
+    "subtitle": "Australia, 2025 · Male–female gap: about 4.8 percentage points",
+    "anchor": "middle"
+  },
+  "data": {
+    "url": "https://raw.githubusercontent.com/HW240823/fit3179-a2-running-fitness/refs/heads/main/running_by_gender_2025.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [
+    {"filter": "datum.gender === 'Male' || datum.gender === 'Female'"},
+    {"calculate": "toNumber(datum.participation_rate)", "as": "rate"},
+    {"calculate": "0", "as": "zero"}
+  ],
+  "width": 620,
+  "height": 180,
+  "layer": [
+    {
+      "mark": {"type": "rule", "strokeWidth": 4},
+      "encoding": {
+        "x": {
+          "field": "zero",
+          "type": "quantitative",
+          "scale": {"domain": [0, 0.23]},
+          "axis": {
+            "title": "Running participation rate",
+            "format": ".0%",
+            "values": [0, 0.05, 0.1, 0.15, 0.2],
+            "grid": true
+          }
+        },
+        "x2": {"field": "rate"},
+        "y": {
+          "field": "gender",
+          "type": "nominal",
+          "sort": ["Male", "Female"],
+          "axis": {"title": null, "labelFontSize": 14}
+        },
+        "color": {
+          "field": "gender",
+          "type": "nominal",
+          "title": "Gender",
+          "scale": {
+            "domain": ["Male", "Female"],
+            "range": ["#2878A5", "#E07A2D"]
+          }
+        },
+        "tooltip": [
+          {"field": "gender", "type": "nominal", "title": "Gender"},
+          {
+            "field": "rate",
+            "type": "quantitative",
+            "title": "Participation rate",
+            "format": ".1%"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {"type": "point", "filled": true, "size": 220},
+      "encoding": {
+        "x": {
+          "field": "rate",
+          "type": "quantitative",
+          "scale": {"domain": [0, 0.23]},
+          "axis": null
+        },
+        "y": {
+          "field": "gender",
+          "type": "nominal",
+          "sort": ["Male", "Female"],
+          "axis": null
+        },
+        "color": {
+          "field": "gender",
+          "type": "nominal",
+          "scale": {
+            "domain": ["Male", "Female"],
+            "range": ["#2878A5", "#E07A2D"]
+          }
+        }
+      }
+    },
+    {
+      "transform": [
+        {"calculate": "format(datum.rate, '.1%')", "as": "rate_label"}
+      ],
+      "mark": {
+        "type": "text",
+        "dx": 12,
+        "fontSize": 13,
+        "fontWeight": "bold",
+        "color": "#222222",
+        "align": "left"
+      },
+      "encoding": {
+        "x": {
+          "field": "rate",
+          "type": "quantitative",
+          "scale": {"domain": [0, 0.23]},
+          "axis": null
+        },
+        "y": {
+          "field": "gender",
+          "type": "nominal",
+          "sort": ["Male", "Female"],
+          "axis": null
+        },
+        "text": {"field": "rate_label", "type": "nominal"}
+      }
+    }
+  ],
+  "resolve": {"axis": {"x": "independent", "y": "independent"}},
+  "config": {
+    "view": {"stroke": null},
+    "axis": {"labelFontSize": 12, "titleFontSize": 13}
+  }
+}

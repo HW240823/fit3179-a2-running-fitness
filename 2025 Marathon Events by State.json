@@ -1,0 +1,114 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Dot-density map of 2025 marathon event counts by state. Each dot represents one event; dot positions are schematic and do not show exact venues.",
+  "title": {
+    "text": "2025 Marathon Events by State",
+    "subtitle": "Each dot = 1 marathon. Positions are spread within each state to show totals, not exact venues."
+  },
+  "width": 700,
+  "height": 465,
+  "projection": {"type": "equalEarth"},
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/rowanhogan/australian-states/master/states.geojson"
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#E8EDF2",
+        "stroke": "#FFFFFF",
+        "strokeWidth": 1.1
+      }
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/HW240823/fit3179-a2-running-fitness/refs/heads/main/marathon_events_2025.csv",
+        "format": {"type": "csv"}
+      },
+      "transform": [
+        {
+          "window": [
+            {"op": "row_number", "as": "dot_no"},
+            {"op": "count", "field": "event", "as": "state_events"}
+          ],
+          "groupby": ["state"],
+          "sort": [{"field": "event", "order": "ascending"}]
+        },
+        {
+          "calculate": "datum.state === 'NSW' ? 147 : datum.state === 'VIC' ? 145.5 : datum.state === 'QLD' ? 146.5 : datum.state === 'SA' ? 135.5 : datum.state === 'WA' ? 121.5 : datum.state === 'TAS' ? 146.5 : datum.state === 'ACT' ? 149.2 : 133",
+          "as": "center_lon"
+        },
+        {
+          "calculate": "datum.state === 'NSW' ? -32.5 : datum.state === 'VIC' ? -36.8 : datum.state === 'QLD' ? -21.5 : datum.state === 'SA' ? -30 : datum.state === 'WA' ? -25.5 : datum.state === 'TAS' ? -42 : datum.state === 'ACT' ? -35.28 : -19",
+          "as": "center_lat"
+        },
+        {
+          "calculate": "datum.state === 'NSW' ? 1 : datum.state === 'VIC' ? 0.7 : datum.state === 'QLD' ? 1.2 : datum.state === 'SA' ? 1 : datum.state === 'WA' ? 1.3 : datum.state === 'TAS' ? 0.35 : datum.state === 'ACT' ? 0.04 : 0.55",
+          "as": "spread"
+        },
+        {
+          "calculate": "datum.state === 'NSW' ? 17 : datum.state === 'VIC' ? 29 : datum.state === 'QLD' ? 43 : datum.state === 'SA' ? 53 : datum.state === 'WA' ? 67 : datum.state === 'TAS' ? 79 : datum.state === 'ACT' ? 89 : 97",
+          "as": "seed"
+        },
+        {
+          "calculate": "abs(sin(datum.dot_no * 12.9898 + datum.seed) * 43758.5453)",
+          "as": "random_a"
+        },
+        {
+          "calculate": "datum.random_a - floor(datum.random_a)",
+          "as": "random_u"
+        },
+        {
+          "calculate": "abs(sin(datum.dot_no * 78.233 + datum.seed * 1.237) * 24634.6345)",
+          "as": "random_b"
+        },
+        {
+          "calculate": "datum.random_b - floor(datum.random_b)",
+          "as": "random_v"
+        },
+        {"calculate": "datum.spread * sqrt(datum.random_u)", "as": "r"},
+        {"calculate": "datum.random_v * 6.283185307179586", "as": "angle"},
+        {
+          "calculate": "datum.center_lon + datum.r * cos(datum.angle)",
+          "as": "plot_lon"
+        },
+        {
+          "calculate": "datum.center_lat + datum.r * sin(datum.angle)",
+          "as": "plot_lat"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "size": 34,
+        "color": "#D9682B",
+        "opacity": 0.82,
+        "stroke": "#FFFFFF",
+        "strokeWidth": 0.45
+      },
+      "encoding": {
+        "longitude": {"field": "plot_lon", "type": "quantitative"},
+        "latitude": {"field": "plot_lat", "type": "quantitative"},
+        "tooltip": [
+          {"field": "state", "type": "nominal", "title": "State"},
+          {"field": "venue", "type": "nominal", "title": "Venue in source"},
+          {"field": "event", "type": "nominal", "title": "Event"},
+          {
+            "field": "state_events",
+            "type": "quantitative",
+            "title": "Events in state"
+          }
+        ]
+      }
+    }
+  ],
+  "config": {
+    "view": {"stroke": null},
+    "title": {
+      "font": "Arial",
+      "fontSize": 20,
+      "subtitleFont": "Arial",
+      "subtitleFontSize": 13,
+      "anchor": "middle"
+    }
+  }
+}
