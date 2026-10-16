@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Running and Fitness in Australia</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+
+  <style>
+    body {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 24px;
+      font-family: Arial, sans-serif;
+      color: #222;
+      background: #f5f7fa;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .charts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .chart-card {
+      min-width: 0;
+      padding: 16px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    @media (max-width: 800px) {
+      .charts {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Running and Fitness in Australia</h1>
+    <p>Exploring participation across activities, states, ages and years</p>
+  </header>
+
+  <main id="charts" class="charts"></main>
+
+  <script>
+    const chartFiles = [
+      "2025 Marathon Events by State.json",
+      "Australian Marathon Finishes by Year.json",
+      "Estimated running participants by state (2025).json",
+      "Geographic Distribution of Running Participation in Australia.json",
+      "How Similar Are Australian States in Running and Fitness.json",
+      "Monthly Marathon Events in 2025.json",
+      "Participation Rates by Activity and Participation Type.json",
+      "Running Participation Rates by Gender in Australia.json",
+      "Running and Fitness Participation by Age (2025).json",
+      "Running and FitnessGym Participation Rates.json",
+      "Running participation rate by Australian state (2025).json"
+    ];
+
+    const container = document.getElementById("charts");
+
+    chartFiles.forEach((file, index) => {
+      const card = document.createElement("section");
+      card.className = "chart-card";
+
+      const chart = document.createElement("div");
+      chart.id = `chart-${index + 1}`;
+      card.appendChild(chart);
+      container.appendChild(card);
+
+      vegaEmbed(chart, encodeURIComponent(file), {
+        actions: false
+      }).catch(error => {
+        chart.innerHTML = `<p>Could not load ${file}. Check the filename and JSON file.</p>`;
+        console.error(error);
+      });
+    });
+  </script>
+</body>
+</html>
