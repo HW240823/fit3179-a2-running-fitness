@@ -1,0 +1,60 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Monthly Marathon Events in 2025",
+    "subtitle": "Number of listed marathon events scheduled in each month"
+  },
+  "width": 650,
+  "height": 350,
+  "data": {
+    "url": "https://raw.githubusercontent.com/HW240823/fit3179-a2-running-fitness/refs/heads/main/marathon_events_2025.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [{"calculate": "toDate(datum.date)", "as": "event_date"}],
+  "mark": {
+    "type": "line",
+    "color": "#D9682B",
+    "strokeWidth": 3,
+    "point": {"filled": true, "size": 75, "color": "#D9682B"}
+  },
+  "encoding": {
+    "x": {
+      "field": "event_date",
+      "type": "temporal",
+      "timeUnit": "month",
+      "axis": {"title": "Month", "format": "%b", "labelAngle": 0}
+    },
+    "y": {
+      "aggregate": "count",
+      "field": "event",
+      "type": "quantitative",
+      "axis": {"title": "Number of events", "tickMinStep": 1}
+    },
+    "tooltip": [
+      {
+        "field": "event_date",
+        "type": "temporal",
+        "timeUnit": "month",
+        "title": "Month",
+        "format": "%B"
+      },
+      {
+        "aggregate": "count",
+        "field": "event",
+        "type": "quantitative",
+        "title": "Events"
+      }
+    ]
+  },
+  "config": {
+    "view": {"stroke": null},
+    "title": {
+      "font": "Arial",
+      "fontSize": 20,
+      "subtitleFont": "Arial",
+      "subtitleFontSize": 13,
+      "anchor": "middle"
+    },
+    "axis": {"labelFont": "Arial", "titleFont": "Arial"}
+  }
+}

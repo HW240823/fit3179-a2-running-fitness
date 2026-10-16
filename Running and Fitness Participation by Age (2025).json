@@ -1,0 +1,101 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Running and Fitness Participation by Age (2025)",
+    "subtitle": "Compare participation rates across age groups"
+  },
+  "width": 650,
+  "height": 370,
+  "data": {
+    "url": "https://raw.githubusercontent.com/HW240823/fit3179-a2-running-fitness/refs/heads/main/running_by_age_2025.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [
+    {
+      "lookup": "age_group",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/HW240823/fit3179-a2-running-fitness/refs/heads/main/fitness_by_age_2025.csv",
+          "format": {"type": "csv"}
+        },
+        "key": "age_group",
+        "fields": ["participation_rate"]
+      },
+      "as": ["fitness_rate"]
+    }
+  ],
+  "layer": [
+    {
+      "mark": {"type": "rule", "color": "#AAB3BD", "strokeWidth": 2},
+      "encoding": {
+        "x": {"field": "participation_rate", "type": "quantitative"},
+        "x2": {"field": "fitness_rate"},
+        "y": {"field": "age_group", "type": "ordinal", "sort": "ascending"}
+      }
+    },
+    {
+      "transform": [
+        {
+          "fold": ["participation_rate", "fitness_rate"],
+          "as": ["measure", "rate"]
+        },
+        {
+          "calculate": "datum.measure === 'participation_rate' ? 'Running' : 'Fitness / gym'",
+          "as": "activity"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 105,
+        "stroke": "white",
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "x": {
+          "field": "rate",
+          "type": "quantitative",
+          "axis": {"title": "Participation rate", "format": ".0%"},
+          "scale": {"zero": true}
+        },
+        "y": {
+          "field": "age_group",
+          "type": "ordinal",
+          "sort": "ascending",
+          "axis": {"title": "Age group"}
+        },
+        "color": {
+          "field": "activity",
+          "type": "nominal",
+          "title": "Activity",
+          "scale": {
+            "domain": ["Running", "Fitness / gym"],
+            "range": ["#D9682B", "#4C78A8"]
+          }
+        },
+        "tooltip": [
+          {"field": "age_group", "type": "ordinal", "title": "Age group"},
+          {"field": "activity", "type": "nominal", "title": "Activity"},
+          {
+            "field": "rate",
+            "type": "quantitative",
+            "title": "Participation rate",
+            "format": ".1%"
+          }
+        ]
+      }
+    }
+  ],
+  "config": {
+    "view": {"stroke": null},
+    "title": {
+      "font": "Arial",
+      "fontSize": 20,
+      "subtitleFont": "Arial",
+      "subtitleFontSize": 13,
+      "anchor": "middle"
+    },
+    "axis": {"labelFont": "Arial", "titleFont": "Arial"},
+    "legend": {"labelFont": "Arial", "titleFont": "Arial"}
+  }
+}
