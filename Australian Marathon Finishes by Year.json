@@ -1,0 +1,206 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Australian Marathon Finishes by Year",
+    "subtitle": "Area = total finishes; colour = female share"
+  },
+  "width": 800,
+  "height": 430,
+  "data": {
+    "url": "https://raw.githubusercontent.com/HW240823/fit3179-a2-running-fitness/refs/heads/main/marathon_by_year_2010_2025.csv",
+    "format": {"type": "csv"}
+  },
+  "layer": [
+    {
+      "transform": [
+        {
+          "calculate": "datum.year < 2020 ? '2010–2019' : '2020–2025'",
+          "as": "period"
+        },
+        {
+          "calculate": "datum.year < 2020 ? datum.total_finishes : 0",
+          "as": "oldContribution"
+        },
+        {
+          "joinaggregate": [
+            {"op": "sum", "field": "oldContribution", "as": "oldTotal"},
+            {"op": "sum", "field": "total_finishes", "as": "allTotal"}
+          ]
+        },
+        {
+          "joinaggregate": [
+            {"op": "sum", "field": "total_finishes", "as": "periodTotal"}
+          ],
+          "groupby": ["period"]
+        },
+        {
+          "window": [
+            {"op": "sum", "field": "total_finishes", "as": "cumulative"}
+          ],
+          "sort": [{"field": "year", "order": "ascending"}],
+          "frame": [null, 0],
+          "groupby": ["period"]
+        },
+        {"calculate": "800 * datum.oldTotal / datum.allTotal", "as": "splitX"},
+        {
+          "calculate": "datum.period === '2010–2019' ? 0 : datum.splitX",
+          "as": "x0"
+        },
+        {
+          "calculate": "datum.period === '2010–2019' ? datum.splitX : 800",
+          "as": "x1"
+        },
+        {
+          "calculate": "34 + 396 * (datum.cumulative - datum.total_finishes) / datum.periodTotal",
+          "as": "y0"
+        },
+        {
+          "calculate": "34 + 396 * datum.cumulative / datum.periodTotal",
+          "as": "y1"
+        },
+        {"calculate": "(datum.x0 + datum.x1) / 2", "as": "xCenter"},
+        {"calculate": "(datum.y0 + datum.y1) / 2", "as": "yCenter"}
+      ],
+      "mark": {"type": "rect", "stroke": "white", "strokeWidth": 2},
+      "encoding": {
+        "x": {
+          "field": "x0",
+          "type": "quantitative",
+          "scale": {"domain": [0, 800]},
+          "axis": null
+        },
+        "x2": {"field": "x1"},
+        "y": {
+          "field": "y0",
+          "type": "quantitative",
+          "scale": {"domain": [0, 430], "reverse": true},
+          "axis": null
+        },
+        "y2": {"field": "y1"},
+        "color": {
+          "field": "female_share",
+          "type": "quantitative",
+          "title": "Female share",
+          "scale": {"domain": [0.25, 0.32], "scheme": "purples"},
+          "legend": {"format": ".0%"}
+        },
+        "tooltip": [
+          {"field": "period", "type": "nominal", "title": "Period"},
+          {"field": "year", "type": "ordinal", "title": "Year"},
+          {
+            "field": "total_finishes",
+            "type": "quantitative",
+            "title": "Total finishes",
+            "format": ","
+          },
+          {
+            "field": "female_share",
+            "type": "quantitative",
+            "title": "Female share",
+            "format": ".1%"
+          },
+          {"field": "events", "type": "quantitative", "title": "Events"}
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "calculate": "datum.year < 2020 ? '2010–2019' : '2020–2025'",
+          "as": "period"
+        },
+        {
+          "calculate": "datum.year < 2020 ? datum.total_finishes : 0",
+          "as": "oldContribution"
+        },
+        {
+          "joinaggregate": [
+            {"op": "sum", "field": "oldContribution", "as": "oldTotal"},
+            {"op": "sum", "field": "total_finishes", "as": "allTotal"}
+          ]
+        },
+        {"calculate": "800 * datum.oldTotal / datum.allTotal", "as": "splitX"},
+        {
+          "window": [{"op": "row_number", "as": "rowNum"}],
+          "sort": [{"field": "year", "order": "ascending"}],
+          "groupby": ["period"]
+        },
+        {"filter": "datum.rowNum === 1"},
+        {
+          "calculate": "datum.period === '2010–2019' ? datum.splitX / 2 : (datum.splitX + 800) / 2",
+          "as": "xCenter"
+        },
+        {"calculate": "17", "as": "headerY"}
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 14,
+        "fontWeight": "bold",
+        "color": "#243447"
+      },
+      "encoding": {
+        "x": {"field": "xCenter", "type": "quantitative"},
+        "y": {"field": "headerY", "type": "quantitative"},
+        "text": {"field": "period", "type": "nominal"}
+      }
+    },
+    {
+      "transform": [
+        {
+          "calculate": "datum.year < 2020 ? '2010–2019' : '2020–2025'",
+          "as": "period"
+        },
+        {
+          "calculate": "datum.year < 2020 ? datum.total_finishes : 0",
+          "as": "oldContribution"
+        },
+        {
+          "joinaggregate": [
+            {"op": "sum", "field": "oldContribution", "as": "oldTotal"},
+            {"op": "sum", "field": "total_finishes", "as": "allTotal"}
+          ]
+        },
+        {
+          "joinaggregate": [
+            {"op": "sum", "field": "total_finishes", "as": "periodTotal"}
+          ],
+          "groupby": ["period"]
+        },
+        {
+          "window": [
+            {"op": "sum", "field": "total_finishes", "as": "cumulative"}
+          ],
+          "sort": [{"field": "year", "order": "ascending"}],
+          "frame": [null, 0],
+          "groupby": ["period"]
+        },
+        {
+          "calculate": "34 + 396 * (datum.cumulative - datum.total_finishes) / datum.periodTotal",
+          "as": "y0"
+        },
+        {
+          "calculate": "34 + 396 * datum.cumulative / datum.periodTotal",
+          "as": "y1"
+        },
+        {"calculate": "800 * datum.oldTotal / datum.allTotal", "as": "splitX"},
+        {
+          "calculate": "datum.period === '2010–2019' ? datum.splitX / 2 : (datum.splitX + 800) / 2",
+          "as": "xCenter"
+        },
+        {"calculate": "(datum.y0 + datum.y1) / 2", "as": "yCenter"},
+        {"filter": "datum.y1 - datum.y0 >= 20"}
+      ],
+      "mark": {"type": "text", "fontSize": 13, "fontWeight": "bold"},
+      "encoding": {
+        "x": {"field": "xCenter", "type": "quantitative"},
+        "y": {"field": "yCenter", "type": "quantitative"},
+        "text": {"field": "year", "type": "ordinal"},
+        "color": {
+          "condition": {"test": "datum.female_share > 0.29", "value": "white"},
+          "value": "#243447"
+        }
+      }
+    }
+  ],
+  "config": {"view": {"stroke": null}}
+}
