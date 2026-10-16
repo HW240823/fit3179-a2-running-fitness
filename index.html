@@ -10,83 +10,148 @@
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
 
   <style>
+    * { box-sizing: border-box; }
     body {
-      max-width: 1250px;
-      margin: 0 auto;
-      padding: 24px;
+      margin: 0;
+      background: #f4f7f8;
+      color: #233238;
       font-family: Arial, sans-serif;
-      color: #222;
-      background: #f5f7fa;
+      line-height: 1.6;
     }
-
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 24px 60px;
+    }
     header {
-      text-align: center;
-      margin-bottom: 28px;
+      padding: 34px;
+      margin-bottom: 32px;
+      color: white;
+      background: #176b70;
+      border-radius: 12px;
     }
-
-    .charts {
+    header h1 { margin: 0 0 10px; font-size: 2.2rem; line-height: 1.2; }
+    header p { max-width: 850px; margin: 0; font-size: 1.05rem; }
+    .summary {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 24px;
     }
-
-    .chart-card {
-      min-width: 0;
-      padding: 16px;
+    .summary-card {
+      padding: 14px 16px;
+      color: #233238;
       background: white;
-      border: 1px solid #ddd;
       border-radius: 8px;
-      overflow-x: auto;
     }
-
-    @media (max-width: 800px) {
-      .charts {
-        grid-template-columns: 1fr;
-      }
+    .summary-card strong {
+      display: block;
+      color: #176b70;
+      font-size: 1.45rem;
+    }
+    .story-section { margin: 34px 0; }
+    .story-section > h2 { margin-bottom: 6px; color: #155d62; font-size: 1.65rem; }
+    .section-intro { max-width: 900px; margin: 0 0 18px; }
+    .insight {
+      padding: 14px 18px;
+      margin: 16px 0;
+      background: #e5f1f1;
+      border-left: 4px solid #23858a;
+      border-radius: 4px;
+    }
+    .chart-card {
+      width: 100%;
+      min-width: 0;
+      padding: 18px;
+      margin: 18px 0;
+      background: white;
+      border: 1px solid #dce4e5;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(20, 50, 55, 0.05);
+    }
+    .chart-frame { width: 100%; max-width: 100%; overflow-x: auto; }
+    .chart-frame .vega-embed { max-width: 100%; }
+    footer {
+      padding-top: 20px;
+      margin-top: 40px;
+      color: #5d6b6e;
+      border-top: 1px solid #ccd7d8;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 700px) {
+      .page { padding: 16px 12px 40px; }
+      header { padding: 24px 18px; }
+      header h1 { font-size: 1.7rem; }
+      .summary { grid-template-columns: 1fr; }
+      .chart-card { padding: 10px; }
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <h1>Running and Fitness in Australia</h1>
-    <p>Exploring participation across activities, states, ages and years</p>
-  </header>
+  <div class="page">
+    <header>
+      <h1>Running and Fitness in Australia</h1>
+      <p>How do Australians participate in running and fitness, how does participation vary across states, and where are marathon events held?</p>
+      <div class="summary">
+        <div class="summary-card"><strong>34.1%</strong>Fitness/Gym overall participation, 2025</div>
+        <div class="summary-card"><strong>16.5%</strong>Running overall participation, 2025</div>
+        <div class="summary-card"><strong>4.8 pp</strong>Male–female running participation gap, 2025</div>
+      </div>
+    </header>
 
-  <main id="charts" class="charts"></main>
+    <section class="story-section">
+      <h2>1. Participation patterns</h2>
+      <p class="section-intro">Compare participation across activities, years, gender and age. Together, these charts show how popular each activity is and how participation differs between groups.</p>
+      <div class="insight">In 2025, overall participation was higher for Fitness/Gym (34.1%) than for Running (16.5%). The 2024–2025 comparison also shows a larger increase for Fitness/Gym than for Running.</div>
+      <div id="chart-1" class="chart-card chart-frame"></div>
+      <div id="chart-2" class="chart-card chart-frame"></div>
+      <div id="chart-3" class="chart-card chart-frame"></div>
+      <div id="chart-4" class="chart-card chart-frame"></div>
+    </section>
+
+    <section class="story-section">
+      <h2>2. Where running participation happens</h2>
+      <p class="section-intro">The maps compare the geographic pattern of running participation across Australian states. Participation rate shows the share of people participating; estimated participant counts show the number of people. These measures describe different things.</p>
+      <div class="insight">The dendrogram groups states by their standardised running and fitness rates. Victoria and Western Australia form a close pair, as do New South Wales and South Australia.</div>
+      <div id="chart-5" class="chart-card chart-frame"></div>
+      <div id="chart-6" class="chart-card chart-frame"></div>
+      <div id="chart-7" class="chart-card chart-frame"></div>
+      <div id="chart-8" class="chart-card chart-frame"></div>
+    </section>
+
+    <section class="story-section">
+      <h2>3. Marathon events and finishes</h2>
+      <p class="section-intro">These charts examine marathon events by state and month, then show how total finishes change across years.</p>
+      <div id="chart-9" class="chart-card chart-frame"></div>
+      <div id="chart-10" class="chart-card chart-frame"></div>
+      <div id="chart-11" class="chart-card chart-frame"></div>
+    </section>
+
+    <footer>Data and chart specifications are available in the project repository. Participation figures shown here are for Australia, 2025, unless otherwise indicated in a chart.</footer>
+  </div>
 
   <script>
-    const chartFiles = [
-      "2025 Marathon Events by State.json",
-      "Australian Marathon Finishes by Year.json",
-      "Estimated running participants by state (2025).json",
-      "Geographic Distribution of Running Participation in Australia.json",
-      "How Similar Are Australian States in Running and Fitness.json",
-      "Monthly Marathon Events in 2025.json",
-      "Participation Rates by Activity and Participation Type.json",
-      "Running Participation Rates by Gender in Australia.json",
-      "Running and Fitness Participation by Age (2025).json",
-      "Running and FitnessGym Participation Rates.json",
-      "Running participation rate by Australian state (2025).json"
+    const charts = [
+      ["Running and FitnessGym Participation Rates.json", "chart-1"],
+      ["Participation Rates by Activity and Participation Type.json", "chart-2"],
+      ["Running Participation Rates by Gender in Australia.json", "chart-3"],
+      ["Running and Fitness Participation by Age (2025).json", "chart-4"],
+      ["Running participation rate by Australian state (2025).json", "chart-5"],
+      ["Estimated running participants by state (2025).json", "chart-6"],
+      ["Geographic Distribution of Running Participation in Australia.json", "chart-7"],
+      ["How Similar Are Australian States in Running and Fitness.json", "chart-8"],
+      ["2025 Marathon Events by State.json", "chart-9"],
+      ["Monthly Marathon Events in 2025.json", "chart-10"],
+      ["Australian Marathon Finishes by Year.json", "chart-11"]
     ];
 
-    const container = document.getElementById("charts");
-
-    chartFiles.forEach((file, index) => {
-      const card = document.createElement("section");
-      card.className = "chart-card";
-
-      const chart = document.createElement("div");
-      chart.id = `chart-${index + 1}`;
-      card.appendChild(chart);
-      container.appendChild(card);
-
-      vegaEmbed(chart, encodeURIComponent(file), {
-        actions: false
-      }).catch(error => {
-        chart.innerHTML = `<p>Could not load ${file}. Check the filename and JSON file.</p>`;
-        console.error(error);
-      });
+    charts.forEach(([file, elementId]) => {
+      vegaEmbed(`#${elementId}`, encodeURIComponent(file), { actions: false })
+        .catch(error => {
+          document.querySelector(`#${elementId}`).innerHTML =
+            `<p>Could not load <strong>${file}</strong>. Check the filename and its data URL.</p>`;
+          console.error(error);
+        });
     });
   </script>
 </body>
