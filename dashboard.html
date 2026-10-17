@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Running and Fitness Dashboard — Header Demo</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 30px;
+      background: #f2f6f8;
+      color: #172b3a;
+      font-family: "Open Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(24px, 5vw, 60px);
+      background: #fff;
+      border: 1px solid #e4ebef;
+      border-radius: 18px;
+      box-shadow: 0 14px 48px rgba(22, 48, 64, .08);
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #176b87;
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 900px;
+      margin: 0;
+      color: #0e455b;
+      font-size: clamp(2.25rem, 5vw, 3.65rem);
+      line-height: 1.08;
+    }
+
+    .lead {
+      max-width: 850px;
+      margin: 20px 0 28px;
+      color: #526473;
+      font-size: 1.15rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      max-width: 1000px;
+    }
+
+    .stat {
+      min-height: 118px;
+      padding: 18px 21px;
+      border: 1px solid #d5e5ea;
+      border-top: 4px solid #176b87;
+      border-radius: 12px;
+      background: #f4fafb;
+      color: #526473;
+      font-size: .94rem;
+      line-height: 1.4;
+    }
+
+    .stat:nth-child(2) { border-top-color: #d56d2b; }
+    .stat:nth-child(3) { border-top-color: #557f68; }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 7px;
+      color: #172b3a;
+      font-size: 2rem;
+    }
+
+    @media (max-width: 700px) {
+      body { padding: 0; }
+      .page { padding: 28px 18px; border-radius: 0; }
+      .stats { grid-template-columns: 1fr; gap: 10px; }
+      .stat { min-height: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <p class="eyebrow">Australia · Participation and events</p>
+      <h1>Running and Fitness in Australia</h1>
+      <p class="lead">
+        How do Australians take part in running and fitness? Explore participation
+        by year, gender and age, compare state patterns, and see how marathon
+        events and finishes have changed.
+      </p>
+      <div class="stats" aria-label="Key figures for 2025">
+        <div class="stat"><strong>34.1%</strong>Fitness/Gym overall participation in 2025</div>
+        <div class="stat"><strong>16.5%</strong>Running overall participation in 2025</div>
+        <div class="stat"><strong>4.8 pp</strong>Male–female running participation gap in 2025</div>
+      </div>
+    </header>
+  </main>
+</body>
+</html>
