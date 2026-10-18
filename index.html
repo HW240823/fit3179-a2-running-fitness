@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Running and Fitness Dashboard — Header Demo</title>
+  <meta name="description" content="Explore running and fitness participation patterns across Australia.">
+  <title>Running and Fitness in Australia</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
   <style>
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       padding: 30px;
@@ -15,7 +18,6 @@
       font-family: "Open Sans", "Segoe UI", Helvetica, Arial, sans-serif;
       line-height: 1.55;
     }
-
     .page {
       max-width: 1100px;
       margin: 0 auto;
@@ -25,7 +27,6 @@
       border-radius: 18px;
       box-shadow: 0 14px 48px rgba(22, 48, 64, .08);
     }
-
     .eyebrow {
       margin: 0 0 12px;
       color: #176b87;
@@ -34,7 +35,6 @@
       letter-spacing: .13em;
       text-transform: uppercase;
     }
-
     h1 {
       max-width: 900px;
       margin: 0;
@@ -42,21 +42,18 @@
       font-size: clamp(2.25rem, 5vw, 3.65rem);
       line-height: 1.08;
     }
-
     .lead {
       max-width: 850px;
       margin: 20px 0 28px;
       color: #526473;
       font-size: 1.15rem;
     }
-
     .stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
       max-width: 1000px;
     }
-
     .stat {
       min-height: 118px;
       padding: 18px 21px;
@@ -68,22 +65,101 @@
       font-size: .94rem;
       line-height: 1.4;
     }
-
     .stat:nth-child(2) { border-top-color: #d56d2b; }
     .stat:nth-child(3) { border-top-color: #557f68; }
-
     .stat strong {
       display: block;
       margin-bottom: 7px;
       color: #172b3a;
       font-size: 2rem;
     }
-
+    .section-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 34px 0 42px;
+      padding: 13px 0;
+      border-top: 1px solid #dbe4ea;
+      border-bottom: 1px solid #dbe4ea;
+    }
+    .section-nav a {
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #eef5f7;
+      color: #0e455b;
+      font-size: .9rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .section-nav a:hover, .section-nav a:focus-visible { background: #d9ebf0; }
+    .story-section { scroll-margin-top: 20px; }
+    .section-heading {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      margin-bottom: 20px;
+    }
+    .section-number {
+      display: grid;
+      width: 46px;
+      height: 46px;
+      place-items: center;
+      border-radius: 14px;
+      background: #0e455b;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+    h2 {
+      margin: 0 0 5px;
+      color: #0e455b;
+      font-size: clamp(1.55rem, 3vw, 2rem);
+      line-height: 1.2;
+    }
+    .section-intro { max-width: 850px; margin: 0; color: #526473; }
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+    .chart-card {
+      min-width: 0;
+      padding: 14px 12px 12px;
+      overflow: hidden;
+      border: 1px solid #dbe4ea;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 4px 16px rgba(22, 48, 64, .045);
+    }
+    .chart { width: 100%; min-width: 0; }
+    .chart .vega-embed { width: 100%; max-width: 100%; }
+    .insight {
+      margin: 3px 3px 0;
+      padding: 10px 12px;
+      border-left: 3px solid #176b87;
+      border-radius: 0 8px 8px 0;
+      background: #f3f8fa;
+      color: #3c5361;
+      font-size: .91rem;
+    }
+    .insight strong { color: #0e455b; }
+    .load-error {
+      padding: 12px;
+      border-radius: 8px;
+      background: #fff3ef;
+      color: #8b321e;
+      font-size: .9rem;
+    }
     @media (max-width: 700px) {
       body { padding: 0; }
-      .page { padding: 28px 18px; border-radius: 0; }
-      .stats { grid-template-columns: 1fr; gap: 10px; }
+      .page { padding: 28px 18px 40px; border-radius: 0; }
+      .stats, .chart-grid { grid-template-columns: 1fr; }
       .stat { min-height: 0; }
+      .section-heading { grid-template-columns: 40px minmax(0, 1fr); gap: 11px; }
+      .section-number { width: 40px; height: 40px; border-radius: 12px; }
+      .chart-card { padding: 10px 6px; }
     }
   </style>
 </head>
@@ -103,6 +179,71 @@
         <div class="stat"><strong>4.8 pp</strong>Male–female running participation gap in 2025</div>
       </div>
     </header>
+
+    <nav class="section-nav" aria-label="Dashboard sections">
+      <a href="#participation">Participation patterns</a>
+    </nav>
+
+    <section class="story-section" id="participation">
+      <div class="section-heading">
+        <div class="section-number" aria-hidden="true">1</div>
+        <div>
+          <h2>Participation patterns</h2>
+          <p class="section-intro">
+            Compare how popular running and fitness are, how participation differs
+            between groups, and how rates have changed over time.
+          </p>
+        </div>
+      </div>
+
+      <div class="chart-grid">
+        <article class="chart-card"><div id="chart-1" class="chart"></div></article>
+        <article class="chart-card"><div id="chart-2" class="chart"></div></article>
+        <article class="chart-card">
+          <div id="chart-3" class="chart"></div>
+          <p class="insight"><strong>Gender gap:</strong> male running participation is about 4.8 percentage points higher than female participation in 2025.</p>
+        </article>
+        <article class="chart-card">
+          <div id="chart-4" class="chart"></div>
+          <p class="insight">Running participation is highest among younger adults in these age groups, while Fitness/Gym is more common across every group shown.</p>
+        </article>
+      </div>
+    </section>
   </main>
+
+  <script>
+    const charts = [
+      ["Running and FitnessGym Participation Rates.json", "chart-1"],
+      ["Participation Rates by Activity and Participation Type.json", "chart-2"],
+      ["Running Participation Rates by Gender in Australia.json", "chart-3"],
+      ["Running and Fitness Participation by Age (2025).json", "chart-4"]
+    ];
+
+    function makeResponsive(spec) {
+      const multiView = spec.hconcat || spec.vconcat || spec.concat || spec.facet || spec.repeat;
+      if (!multiView) {
+        spec.width = "container";
+        spec.autosize = { type: "fit-x", contains: "padding" };
+      }
+      return spec;
+    }
+
+    charts.forEach(([file, elementId]) => {
+      fetch(encodeURIComponent(file))
+        .then(response => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.json();
+        })
+        .then(spec => vegaEmbed(`#${elementId}`, makeResponsive(spec), {
+          actions: false,
+          config: { background: "transparent" }
+        }))
+        .catch(error => {
+          document.querySelector(`#${elementId}`).innerHTML =
+            '<p class="load-error">This chart could not load. Check that the JSON chart files are in the same GitHub folder as this HTML file.</p>';
+          console.error(`Chart load failed: ${file}`, error);
+        });
+    });
+  </script>
 </body>
 </html>
