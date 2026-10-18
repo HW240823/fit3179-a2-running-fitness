@@ -92,7 +92,7 @@
       text-decoration: none;
     }
     .section-nav a:hover, .section-nav a:focus-visible { background: #d9ebf0; }
-    .story-section { scroll-margin-top: 20px; }
+    .story-section { margin: 0 0 56px; scroll-margin-top: 20px; }
     .section-heading {
       display: grid;
       grid-template-columns: 48px minmax(0, 1fr);
@@ -124,6 +124,7 @@
       gap: 18px;
       align-items: stretch;
     }
+    .chart-card.wide { grid-column: 1 / -1; }
     .chart-card {
       min-width: 0;
       padding: 14px 12px 12px;
@@ -156,6 +157,7 @@
       body { padding: 0; }
       .page { padding: 28px 18px 40px; border-radius: 0; }
       .stats, .chart-grid { grid-template-columns: 1fr; }
+      .chart-card.wide { grid-column: auto; }
       .stat { min-height: 0; }
       .section-heading { grid-template-columns: 40px minmax(0, 1fr); gap: 11px; }
       .section-number { width: 40px; height: 40px; border-radius: 12px; }
@@ -182,6 +184,7 @@
 
     <nav class="section-nav" aria-label="Dashboard sections">
       <a href="#participation">Participation patterns</a>
+      <a href="#states">State participation</a>
     </nav>
 
     <section class="story-section" id="participation">
@@ -212,6 +215,36 @@
         </article>
       </div>
     </section>
+
+    <section class="story-section" id="states">
+      <div class="section-heading">
+        <div class="section-number" aria-hidden="true">2</div>
+        <div>
+          <h2>Where running participation happens</h2>
+          <p class="section-intro">
+            Compare running participation across Australian states and territories.
+            The ranking gives precise rate comparisons, while the maps show how
+            participation rates and estimated runner numbers vary by area.
+          </p>
+        </div>
+      </div>
+
+      <div class="chart-grid">
+        <article class="chart-card wide">
+          <div id="chart-5" class="chart"></div>
+          <p class="insight"><strong>Highest rate:</strong> the ACT has the highest reported running participation rate; state and territory rates range from about 15.5% to 23.2%.</p>
+        </article>
+        <article class="chart-card"><div id="chart-7" class="chart"></div></article>
+        <article class="chart-card">
+          <div id="chart-6" class="chart"></div>
+          <p class="insight">Circle size represents estimated participant numbers. More populous states can have more runners even when their participation rate is lower.</p>
+        </article>
+        <article class="chart-card wide">
+          <div id="chart-8" class="chart"></div>
+          <p class="insight">The dendrogram groups states by standardised running and fitness participation rates. States that join at a shorter distance have more similar participation profiles.</p>
+        </article>
+      </div>
+    </section>
   </main>
 
   <script>
@@ -219,7 +252,11 @@
       ["Running and FitnessGym Participation Rates.json", "chart-1"],
       ["Participation Rates by Activity and Participation Type.json", "chart-2"],
       ["Running Participation Rates by Gender in Australia.json", "chart-3"],
-      ["Participation by Age Group.json", "chart-4"]
+      ["Participation by Age Group.json", "chart-4"],
+      ["Running participation rate by Australian state (2025).json", "chart-5"],
+      ["Estimated running participants by state (2025).json", "chart-6"],
+      ["Geographic Distribution of Running Participation in Australia.json", "chart-7"],
+      ["How Similar Are Australian States in Running and Fitness.json", "chart-8"]
     ];
 
     function makeResponsive(spec) {
